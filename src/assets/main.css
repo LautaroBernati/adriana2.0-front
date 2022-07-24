@@ -11,13 +11,13 @@
 a,
 .green {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: hsla(160, 100%, 37%, 1) !important;
   transition: 0.4s;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: hsla(304, 100%, 37%, 0.2);
   }
 }
 
@@ -25,6 +25,7 @@ a,
   body {
     display: flex;
     place-items: center;
+    background-color: rgb(19, 47, 19) !important;
   }
 
   #app {
