@@ -1,7 +1,12 @@
 import axios from 'axios';
+import store from '../store/store';
+import utils from '../helpers/utils';
+
+const API_URL = utils.API_URL;
+let userToken = store.getters.getToken;
 
 const apiClient = axios.create({
-  baseURL: `http://localhost:4444`,
+  baseURL: API_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -9,26 +14,20 @@ const apiClient = axios.create({
 })
 
 export default {
-  getRestaurante() {
-    return apiClient.get('/restaurantes', {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}})
+  getClienteByDni(dni) {
+    return apiClient.get('/clientes=?'+dni, {headers: {Authorization: `Bearer ${userToken}`}})
   },
-  getRestauranteId(id) {
-    return apiClient.get('/restaurantes/' + id,  {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}}) 
+  getAllClientes(id) {
+    return apiClient.get('/clientes',  {headers: {Authorization: `Bearer ${userToken}`}}) 
   },
-  postRestaurante(restaurante) {
-    let token = tokenService.createRestoToken(restaurante)
-    return apiClient.post('/altaRestaurante/', {token} ,  {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}})
+  createCliente(cliente) {
+    return apiClient.post('/clientes', {cliente} ,  {headers: {Authorization: `Bearer ${userToken}`}})
   },
-  deleteRestaurante(addressParam) {
-    let resto = {
-      address: addressParam,
-    }
-    let token = tokenService.createRestoToken(resto)
-    return apiClient.delete('/eliminarRestaurante/' + token,  {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}} )
+  borrarCliente(dni){
+    return apiClient.delete('/clientes/' + dni,  {headers: {Authorization: `Bearer ${userToken}`}} )
   },
-  putRestaurante(restaurante) {
-    let token = tokenService.createRestoToken(restaurante)
-    return apiClient.put('/modificarRestaurante/', {token},  {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}})
+  editarCliente(cliente) {
+    return apiClient.put('/clientes/', {cliente},  {headers: {Authorization: `Bearer ${userToken}`}})
   }, 
 
 }

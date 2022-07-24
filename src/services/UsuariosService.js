@@ -1,7 +1,8 @@
 import axios from 'axios';
 import store from '../store/store';
+import utils from '../helpers/utils';
 
-//let userToken = store.default.getters.getToken;
+const API_URL = utils.API_URL;
 let userToken = store.getters.getToken;
 /*try{
   userToken = JSON.parse(localStorage.loggedUser);
@@ -11,7 +12,7 @@ let userToken = store.getters.getToken;
 }*/
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3005', 
+  baseURL: API_URL, 
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
