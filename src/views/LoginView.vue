@@ -52,11 +52,14 @@ export default {
 
 <style>
 #login {
+  color:whitesmoke;
+  padding:2%;
   background-color: #262222;
-  border: double;
+  border: double darkorchid;
   font-family: "Lato", sans-serif;
-  margin-top: 7%;
+  margin-top: 1%;
   z-index: 10;
+  width: 100%;;
 }
 #fondoLogin {
   background-color: #000;

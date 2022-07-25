@@ -1,6 +1,5 @@
 <template>
-    <section id="">
-            <div id="login" class="form-group">
+            <div id="login" >
                 <form @submit.prevent="loginWithCredentials">
                     <label for="ingresarTexto"><h2><b>Ingresar</b></h2></label>
                     <input
@@ -23,7 +22,6 @@
                     </div>
                 </form>
             </div>
-    </section>
 </template>
 
 <script>

@@ -3,7 +3,7 @@ import TheWelcome from '@/components/TheWelcome.vue'
 </script>
 
 <template>
-  <div class="home">
+  <div class="home" id="home">
     <header id="headerFondo">
       <img src="/chanelicon.png" id="fondo">
     </header>
@@ -24,6 +24,11 @@ export default {
 </script>
 
 <style>
+#home{
+  height: 1px;
+  padding: 0%;
+  
+}
 #logo{
   position:absolute;
   top:10%;

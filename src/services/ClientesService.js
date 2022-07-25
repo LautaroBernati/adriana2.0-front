@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store/store';
 import utils from '../helpers/utils';
 
-class ClientesService2 {
+class ClientesService {
     constructor(token){
         this.API_URL = utils.API_URL;
         this.apiClient = axios.create({
@@ -33,4 +33,4 @@ class ClientesService2 {
     }
 }
 
-export default ClientesService2;
+export default ClientesService;
