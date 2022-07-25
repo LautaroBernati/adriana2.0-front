@@ -30,15 +30,15 @@ export default {
     return apiClient.get('/usuarios', {headers: {Authorization: `Bearer ${userToken}`}});
   },
   postUsuario(usuario) {
-    //let token = tokenService.createToken(usuario)
-    return apiClient.post('/usuarios', {token})
+    return apiClient.post('/usuarios', {usuario})
   },
-  deleteUsuario(usuario) {
-    //let token = tokenService.createToken(usuario)
+  deleteUsuario(dni) {
     return apiClient.delete('/usuarios/' + dni, {headers: {Authorization: `Bearer ${userToken}`}});
   },
   putUsuario(usuario) {
-    //let token = tokenService.createToken(usuario)
-    return apiClient.put('/usuarios', {token}, {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}})
+    return apiClient.put('/usuarios', {usuario}, {headers: {Authorization: `Bearer ${store.default.getters.getToken}`}})
   },
+  /*getApiUrl(){
+    return API_URL;
+  }*/
 }

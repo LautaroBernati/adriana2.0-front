@@ -10,7 +10,6 @@ const store = createStore({
             localStorage.setItem('usuario', usuario);
             state.usuarioLogeado = usuario;
             state.tokenUsuario = usuario.token;
-            console.log('state: '+JSON.stringify(state.usuarioLogeado));
         },
         CLEAR_USER_DATA(state) {
             localStorage.removeItem('usuario');

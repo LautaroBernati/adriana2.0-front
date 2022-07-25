@@ -14,6 +14,7 @@ export default {
     },
     data() {
         return {
+            
             /*formUser: {
                 dni: "",
                 userPass: "",
@@ -22,18 +23,18 @@ export default {
     },
     methods: {
         async loginWithCredentials(formUser) {
+            //this.ipAddress = UsuariosService.getApiUrl();
             try {
                 if(!this.validarUsuario(formUser)) throw new Error("Usuario invalido");
                 await UsuariosService.login(formUser)
                 .then((data) => {
                     let loggedUser = LoggedUserFactory(data.data);
                     this.$store.dispatch('login', loggedUser);
-                    console.log('token desde getter ' + this.$store.getters.getToken);
                     //this.$router.push({ name: "Home" });
                 });
             } catch (err) {
                 console.log(err.message);
-                alert("Usuario incorrecto");
+                alert('Usuario incorrecto');
             }
         },
         validarUsuario(data){

@@ -2,30 +2,44 @@
   <div>
     <section id="fondito">
       <!--<img src="../../public/img/fondoVerResto.jpg" id="verRestoBack" />-->
-      <div class="row g-0">
-        <div class="col-2"></div>
         <div class="col-8 tabla">
           <table class="table table-dark table-striped tablaRestos">
             <thead class="table-dark">
               <tr>
+                <th>Alias</th>
                 <th>Nombre</th>
-                <th>Direccion</th>
-                <th>Promedio de puntos</th>
-                <th>Tipo</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Dirección</th>
+                <th>Localidad</th>
+                <th>Provincia</th>
+                <th>Referencia</th>
+                <th>Cod Postal</th>
+                <th>Cod Area</th>
+                <th>Celular</th>
+                <th>EMail</th>
                 <th></th>
                 <th></th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(resto, index) in restos" v-bind:key="index">
-                <td>{{ resto.name }}</td>
-                <td>{{ resto.address }}</td>
-                <td>{{ calcularPromedio(resto) }}</td>
-                <td>{{ resto.Rtype }}</td>
+              <tr v-for="(cliente, index) in clientes" v-bind:key="index">
+                <td>{{ cliente.alias }}</td>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.apellido }}</td>
+                <td>{{ cliente.dni }}</td>
+                <td>{{ cliente.direccion }}</td>
+                <td>{{ cliente.localidad }}</td>
+                <td>{{ cliente.provincia }}</td>
+                <td>{{ cliente.referencia }}</td>
+                <td>{{ cliente.cp }}</td>
+                <td>{{ cliente.codArea }}</td>
+                <td>{{ cliente.celular }}</td>
+                <td>{{ cliente.email }}</td>
                 <td>
                   <button
-                    @click="verDetalle(resto._id)"
+                    @click="verDetalle(cliente._id)"
                     class="btn btn-secondary"
                   >
                     Ver
@@ -63,23 +77,28 @@
           </div>
         </div>
         <div class="col-2"></div>
-      </div>
     </section>
   </div>
 </template>
 
 <script>
-//import RestaurantesService from "@/services/RestaurantesService.js";
+import ClientesService from '../services/ClientesService.js';
 export default {
-  name: "verRestos",
+  name: "CRUDClientes",
   created() {
-    //RestaurantesService.getRestaurante().then((data) => {
-    //  this.restos = data.data;
-    //});
+    const service = new ClientesService(this.$store.getters.getToken);
+    try{
+      service.getAllClientes()
+        .then((data) => {
+          this.clientes = data.data;
+        });
+    } catch(err){
+      console.log(err.message);
+    }
   },
   data() {
     return {
-      restos: [],
+      clientes: [],
       modificarModel: "",
       indiceResto: -1,
       modificar: false,
@@ -98,7 +117,7 @@ export default {
       return 0;
     },
     esAdmin() {
-      return this.$store.state.decodedUser.admin;
+      //return this.$store.state.decodedUser.admin;
     },
     async borrarResto(address, indexResto) {
       await RestaurantesService.deleteRestaurante(address);
@@ -124,7 +143,7 @@ export default {
 </script>
 <style>
 #fondito {
-  height: 650px;
+  
   background-color: #000000 !important;
 }
 /*#verRestoBack {
@@ -136,9 +155,9 @@ export default {
   z-index: 1;
 }*/
 .tabla {
-  z-index: 2;
+  
 }
 .tablaRestos {
-  margin-top: 3%;
+  
 }
 </style>
