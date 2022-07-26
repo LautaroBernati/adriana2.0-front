@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import ClientesView from '../views/ClientesView.vue';
+import store from '../store/store.js';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +20,10 @@ const router = createRouter({
     {
       path: '/clientes',
       name: 'Clientes',
-      component: ClientesView
+      component: ClientesView,
+      meta: {
+        needsAuth: true
+      },
     },
     {
       path: '/about',
@@ -30,6 +34,16 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.needsAuth && store.getters.isAdmin){
+    next();
+  } else if (to.meta.needsAuth && !store.getters.isAdmin){
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router

@@ -30,7 +30,15 @@ const store = createStore({
         },
     },
     getters: {
-        islogin(state) {
+        isAdmin(state){
+            if(!state.usuarioLogeado) return false;
+            if(state.usuarioLogeado.type == 'administrator'){
+                return true;
+            } else {
+                return false;
+            }
+        },
+        isLoggedIn(state) {
             return !!state.tokenUsuario
         },
         getUsuario(state) {
