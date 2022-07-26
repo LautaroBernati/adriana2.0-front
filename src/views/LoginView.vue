@@ -30,7 +30,7 @@ export default {
                 .then((data) => {
                     let loggedUser = LoggedUserFactory(data.data);
                     this.$store.dispatch('login', loggedUser);
-                    //this.$router.push({ name: "Home" });
+                    this.$router.push({ name: "Home" });
                 });
             } catch (err) {
                 console.log(err.message);

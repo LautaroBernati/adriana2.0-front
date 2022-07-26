@@ -5,7 +5,7 @@ import router from './router';
 import store from './store/store.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'fontawesome-free';
+import '@fortawesome/fontawesome-free';
 
 
 const app = createApp(App);

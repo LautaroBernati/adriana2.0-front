@@ -15,23 +15,24 @@ export default {
     <h1>
       <span v-if="collapsed">
         <div>V</div>
-        <div>S</div>
+        <div>F</div>
       </span>
       <span v-else>Menu</span>
     </h1>
 
     <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
-    <SidebarLink to="/login" icon="fas fa-columns">Login</SidebarLink>
-    <SidebarLink to="/clientes" icon="fas fa-chart-bar">Clientes</SidebarLink>
+    <SidebarLink to="/login" icon="fa-solid fa-right-to-bracket">Login</SidebarLink>
+    <SidebarLink to="/clientes" icon="fas fa-users">Clientes</SidebarLink>
+    <SidebarLink to="/stage1" icon="fa-thin fa-dollar-sign">Stage 1</SidebarLink>
+    <SidebarLink to="/stage2" icon="fa-solid fa-dollar-sign">Stage 2</SidebarLink>
     <SidebarLink to="/about" icon="fas fa-users">Acerca De</SidebarLink>
-    <SidebarLink to="/image" icon="fas fa-image">Images</SidebarLink>
 
     <span
       class="collapse-icon"
       :class="{ 'rotate-180': collapsed }"
       @click="toggleSidebar"
       
-    >AA
+    >
       <i class="fas fa-angle-double-left" />
     </span>
   </div>

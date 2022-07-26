@@ -5,15 +5,18 @@ import TheWelcome from '@/components/TheWelcome.vue'
 <template>
   <div class="home" id="home">
     <header id="headerFondo">
-      <img src="/chanelicon.png" id="fondo">
+      <img src="/vf-profilepic.jpg" alt="logo" id="vf-logo">
     </header>
     <img src="/favicon.ico" id="logo">
-    <p class="textoFondo text-light">
-      Bienvenido al Sistema Adriana 2.0
-      <br>
-      <router-link to="/register" class="text-light">Registrate</router-link> para poder calificar y comentar sobre tus experiencias en distintos restaurantes que se encuentran en nuestros listados.
-      Accede a los distintos links desde arriba.
-    </p>
+
+    <div class="cajita">
+      <p id="textoFondo" class="">
+        Bienvenido al Sistema Adriana 2.0
+        <br>
+        <router-link to="/login" class="">Inicia sesion</router-link> para poder operar
+      </p>
+    </div>
+    
   </div>
 </template>
 
@@ -24,6 +27,7 @@ export default {
 </script>
 
 <style>
+
 #home{
   height: 1px;
   padding: 0%;
@@ -40,20 +44,28 @@ export default {
 }
 #fondo{
   opacity: 0.5;
-  object-fit: cover;
-  height: 650px;
-  width: 100%;
+  object-fit: scale-down;
+  
+  width: 10%;
 }
 @media(max-width: 700px){
   #fondo{
     height:400px
   }
 }
-.textoFondo{
+#textoFondo{
   position: absolute;
   top: 50%;
-  text-align: left;
-  left:2%; 
-  font-size: 1.5em
+  left:40%;
+  font-size: 1.5em;
+  color:darkviolet;
+  z-index: 100;
+  background-color: grey;
+  padding: 15px;
+  border: 4px solid gold;
+  border-radius: 10px;
+}
+#vf-logo{
+  z-index:1;
 }
 </style>
