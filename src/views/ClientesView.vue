@@ -4,11 +4,11 @@
     v-on:verCliente="verDetalle"
     v-on:modCliente="modCliente"
     v-on:borrarCliente="borrCliente"
-    v-show='mostrarLista'>
+    v-if='mostrarLista'>
   </ClientesList>
   <ClienteDetalle 
     v-bind:cliente="cliente"
-    v-show="mostrarDetalle">
+    v-if="mostrarDetalle">
   </ClienteDetalle>
 
 </template>

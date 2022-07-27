@@ -59,7 +59,7 @@ export default {
   font-family: "Lato", sans-serif;
   margin-top: 1%;
   z-index: 10;
-  width: 100%;;
+  width: 100%;
 }
 #fondoLogin {
   background-color: #000;
