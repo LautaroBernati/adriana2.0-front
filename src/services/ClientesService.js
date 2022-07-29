@@ -16,19 +16,19 @@ class ClientesService extends Service {
     }
 
     async getClienteByDni(dni) {
-        return this.apiClient.get('/clientes=?'+dni, {headers: {Authorization: `Bearer ${this.token}`}});
+        return await this.apiClient.get('/clientes=?'+dni, {headers: {Authorization: `Bearer ${this.token}`}});
       }
     async getAllClientes() {
-        return this.apiClient.get('/clientes',  {headers: {Authorization: `Bearer ${this.token}`}});
+        return await this.apiClient.get('/clientes',  {headers: {Authorization: `Bearer ${this.token}`}});
     }
-    createCliente(cliente) {
-        return this.apiClient.post('/clientes', {cliente} ,  {headers: {Authorization: `Bearer ${this.token}`}});
+    async createCliente(cliente) {
+        return await this.apiClient.post('/clientes', {cliente} ,  {headers: {Authorization: `Bearer ${this.token}`}});
     }
-    borrarCliente(dni){
-        return this.apiClient.delete('/clientes/' + dni,  {headers: {Authorization: `Bearer ${this.token}`}} );
+    async borrarCliente(alias){
+        return await this.apiClient.delete('/clientes/' + alias,  {headers: {Authorization: `Bearer ${this.token}`}} );
     }
-    editarCliente(cliente) {
-        return this.apiClient.put('/clientes/', {cliente},  {headers: {Authorization: `Bearer ${this.token}`}});
+    async editarCliente(cliente) {
+        return await this.apiClient.put('/clientes', {cliente},  {headers: {Authorization: `Bearer ${this.token}`}});
     }
 }
 

@@ -1,6 +1,16 @@
 <template>
+  
+  <button
+  id="btnCrear"
+  class="btn btn-primary"
+  v-on:click="crearCliente('')"
+  v-if="mostrarLista">
+    Crear Nuevo Cliente
+  </button>
+  
   <ClientesList
-    v-bind:listaClientes='clientes'
+    id="clientes-list"
+    v-bind:lista-clientes='clientes'
     v-on:verCliente="verDetalle"
     v-on:modCliente="modCliente"
     v-on:borrarCliente="borrCliente"
@@ -8,7 +18,10 @@
   </ClientesList>
   <ClienteDetalle 
     v-bind:cliente="cliente"
-    v-if="mostrarDetalle">
+    v-bind:accion="accion"
+    v-if="mostrarDetalle"
+    v-on:aceptar="aceptar"
+    v-on:cancelar="cancelar">
   </ClienteDetalle>
 
 </template>
@@ -22,12 +35,13 @@ export default {
   name: "CRUDClientes",
   components:{
     ClientesList,
-    ClienteDetalle
+    ClienteDetalle,
+    service:{}
   },
-  created() {
-    const service = new ClientesService(this.$store.getters.getToken);
+  async created() {
+    this.service = new ClientesService(this.$store.getters.getToken);
     try{
-      service.getAllClientes()
+      await this.service.getAllClientes()
         .then((data) => {
           this.clientes = data.data;
         });
@@ -41,38 +55,63 @@ export default {
       cliente: {},
       mostrarLista: true,
       mostrarDetalle: false,
+      accion: "",
     };
   },
   methods: {
+    crearCliente(){
+      console.log('entro');
+      this.cliente = {
+        direccion:{
+          calle:"",
+          altura:""
+        }};
+      this.accion = "crear";
+      this.renderizarDetalle();
+    },
     verDetalle(cliente) {
       this.cliente = cliente;
+      this.accion = "ver";
       this.renderizarDetalle();
-      //console.log('entra\n' + JSON.stringify(cliente));
-      //this.$router.push({ name: "DetalleResto", params: { id: idResto } });
     },
     borrCliente(cliente) {
-      console.log('borrar tal y tal')
-      //await RestaurantesService.deleteRestaurante(address);
-      //this.restos.splice(indexResto, 1);
+      this.cliente = cliente;
+      this.accion = "borrar";
+      this.renderizarDetalle();
     },
     modCliente(cliente) {
-      console.log('modificar tal y cual')
-      
+      this.cliente = cliente;
+      this.accion = "editar";
+      this.renderizarDetalle();
     },
     renderizarDetalle(){
       this.mostrarLista = false;
       this.mostrarDetalle = true;
     },
-    renderizarLista(){
+    async renderizarLista(){
+      let data;
       this.mostrarLista = true;
       this.mostrarDetalle = false;
-    }
+      data = await this.service.getAllClientes();
+      this.clientes = data.data;
+    },
+    aceptar(){
+      this.renderizarLista();
+    },
+    cancelar(){
+      this.renderizarLista();
+    },
   },
 };
 </script>
 <style>
-#fondito { 
-  background-color: #000000 !important;
+#clientes-list{
+  text-align: -webkit-center;
+  
+}
+#btnCrear{
+  
+  margin: 10px;
 }
 
 </style>
