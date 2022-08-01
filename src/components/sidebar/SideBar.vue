@@ -21,10 +21,10 @@ export default {
     </h1>
 
     <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
-    <SidebarLink to="/login" icon="fa-solid fa-right-to-bracket">Login</SidebarLink>
+    <SidebarLink to="/login" icon="fa-solid fa-right-to-bracket" v-if="!this.$store.getters.isLoggedIn">Login</SidebarLink>
     <SidebarLink to="/clientes" icon="fas fa-users">Clientes</SidebarLink>
-    <SidebarLink to="/stage1" icon="fa-thin fa-dollar-sign">Stage 1</SidebarLink>
-    <SidebarLink to="/stage2" icon="fa-solid fa-dollar-sign">Stage 2</SidebarLink>
+    <SidebarLink to="/precios" icon="fa-thin fa-dollar-sign">Lista Precios</SidebarLink>
+    <SidebarLink to="/cotizador" icon="fa-solid fa-dollar-sign">Cotizador</SidebarLink>
     <SidebarLink to="/about" icon="fas fa-users">Acerca De</SidebarLink>
 
     <span

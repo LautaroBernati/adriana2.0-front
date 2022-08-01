@@ -2,6 +2,7 @@
     <div id="detalle-cliente">
         <form id="formulario" @submit.prevent="">
             <label for="tituloTxt"><h2><b>{{tituloTxt}}</b></h2></label>
+            <p class="text-info" id="leyenda">{{leyenda}}</p>
             <table id="tabla1" class="table table-dark table-striped">
 
                 <tbody>
@@ -23,7 +24,7 @@
                                     type="text"
                                     v-model="cliente.alias"
                                     class="form-control input-lg"
-                                    style=""
+                                    style="background-color: grey;"
                                     disabled
                                     >
                                 </label>
@@ -96,14 +97,44 @@
                             </td>
                             
                             <td>
-                                <label for="provincia">*Provincia:
+                                <!--<label for="provincia">*Provincia:</label>
                                     <input 
                                     type="text"
                                     v-model="cliente.provincia"
                                     placeholder="Provincia"
                                     class="form-control input-lg"
-                                    v-bind:disabled="isDisabled">
-                                </label>
+                                    v-bind:disabled="isDisabled">-->
+                                <label for="provincia">*Provincia:</label>
+                                <select name="provincias" id="provincias" class="form-select"
+                                v-model="cliente.provincia"
+                                v-bind:disabled="isDisabled">
+                                    <option :value="cliente.provincia" selected disabled>{{cliente.provincia}}</option>
+                                    <option value="Buenos Aires">Buenos Aires</option>
+                                    <option value="Buenos Aires">CABA</option>
+                                    <option value="Catamarca">Catamarca</option>
+                                    <option value="Chaco">Chaco</option>
+                                    <option value="Chubut">Chubut</option>
+                                    <option value="Cordoba">Cordoba</option>
+                                    <option value="Corrientes">Corrientes</option>
+                                    <option value="Entre Rios">Entre Rios</option>
+                                    <option value="Formosa">Formosa</option>
+                                    <option value="Jujuy">Jujuy</option>
+                                    <option value="La Pampa">La Pampa</option>
+                                    <option value="La Rioja">La Rioja</option>
+                                    <option value="Mendoza">Mendoza</option>
+                                    <option value="Misiones">Misiones</option>
+                                    <option value="Neuquen">Neuquen</option>
+                                    <option value="Rio Negro">Rio Negro</option>
+                                    <option value="Salta">Salta</option>
+                                    <option value="San Juan">San Juan</option>
+                                    <option value="San Luis">San Luis</option>
+                                    <option value="Santa Cruz">Santa Cruz</option>
+                                    <option value="Santa Fe">Santa Fe</option>
+                                    <option value="Sgo. del Estero">Sgo. del Estero</option>
+                                    <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                    <option value="Tucuman">Tucuman</option>
+                                </select>
+                                
                             </td>
                         </tr>
                         <tr>
@@ -207,17 +238,21 @@
             switch(this.accion){
                 case "crear":
                     this.tituloTxt="Creación de un nuevo cliente";
+                    this.leyenda="Todos los campos con un * son obligatorios"
                     break;
                 case "ver":
                     this.tituloTxt="Detalles del cliente. No puede modificar sus datos";
+                    this.leyenda="Si desea modificar los datos, vuelva atrás y clickee el botón Modificar"
                     this.isDisabled=true;
                     break;
                 case "editar":
                     this.tituloTxt="Modificación de Cliente";
+                    this.leyenda="No puede modificar el Alias de un cliente ya creado"
                     this.disableAlias=true;
                     break;
                 case "borrar":
                     this.tituloTxt="Borrar cliente";
+                    this.leyenda="Datos del cliente a eliminar"
                     this.disableAlias=true;
                     break;
             }
@@ -228,6 +263,7 @@
                 tituloTxt: "",
                 isDisabled: false,
                 disableAlias: false,
+                leyenda: "",
             }
         },
         methods:{
@@ -337,6 +373,12 @@ input{
   z-index: 10;
   width: fit-content;
   margin: auto;
-  
+}
+#leyenda{
+    border-top: 2px solid white;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    width: 80%;
+    margin:auto;
 }
 </style>

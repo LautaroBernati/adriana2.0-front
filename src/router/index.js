@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import ClientesView from '../views/ClientesView.vue';
 import store from '../store/store.js';
+import PreciosView from '../views/PreciosView.vue';
+import CotizadorView from '../views/CotizadorView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +23,22 @@ const router = createRouter({
       path: '/clientes',
       name: 'Clientes',
       component: ClientesView,
+      meta: {
+        needsAuth: true
+      },
+    },
+    {
+      path: '/precios',
+      name: 'Precios',
+      component: PreciosView,
+      meta: {
+        needsAuth: true
+      },
+    },
+    {
+      path: '/cotizador',
+      name: 'Cotizador',
+      component: CotizadorView,
       meta: {
         needsAuth: true
       },
