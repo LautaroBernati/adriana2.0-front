@@ -1,14 +1,17 @@
 <template>
-    <button
-    class="btn btn-dark">Editar Lista</button>
     
-    <ListaPrecios
-        v-bind:listaPerfumes="perfumes"
-        v-on:enviar="recibirDatos">
-    </ListaPrecios>
-    <Formateador v-if="(!!selectedItemsParent)"
-        v-bind:perfumesSeleccionados="selectedItemsParent">
-    </Formateador>
+    <div id="recuadroVista">
+        <button class="btn btn-dark" id="btnEditarLista">Editar Lista</button>
+
+        <ListaPrecios
+            v-if="listaIsDisabled === false"
+            v-bind:listaPerfumes="perfumes"
+            v-on:enviar="recibirDatos">
+        </ListaPrecios>
+        <Formateador v-if="(!!selectedItemsParent)"
+            v-bind:perfumesSeleccionados="selectedItemsParent">
+        </Formateador>
+    </div>
 </template>
 
 <script>
@@ -20,11 +23,12 @@ import PerfumesService from '../services/PerfumesService.js';
         components:{
             ListaPrecios, Formateador,
         },
-        async created(){
+        async mounted(){
             this.service = new PerfumesService(this.$store.getters.getToken);
             try{
                 let data = await this.service.getAllPerfumes();
                 this.perfumes = data.data;
+                this.listaIsDisabled=false; //tuve que llegar a esto para que el componente respete el asincronismo de getAllPerfumes
             } catch(e){
                 console.log(e.message);
                 this.$swal.fire({
@@ -39,7 +43,8 @@ import PerfumesService from '../services/PerfumesService.js';
                 perfumes:[],
                 perfume:{},
                 service:{},
-                selectedItemsParent:[]
+                selectedItemsParent:[],
+                listaIsDisabled: true
             }
         },
         methods:{
@@ -52,5 +57,15 @@ import PerfumesService from '../services/PerfumesService.js';
 </script>
 
 <style scoped>
-
+#btnEditarLista{
+    margin-top: 1%;
+    margin-bottom: 2%;
+}
+#recuadroVista{
+    margin: 2%;
+    background-color: rgb(234, 234, 234);
+    border: 2px solid lightgrey;
+    border-radius: 3px;
+    padding: 10px;
+}
 </style>

@@ -1,7 +1,16 @@
 <template>
-    <br>
-    <label for="buscador">Buscador</label>
-    <input type="text" id="buscador">
+    <div id="">
+        <tr>
+            <td id="tdInpBuscador">
+                <input type="text" id="inpBuscador" class="form-control" placeholder="Escriba aqui para buscar un perfume"
+                data-toggle="tooltip" data-placement="top" title="Tooltip on top" v-model="queryParam">
+            </td>            
+            <td id="tdBtnBuscar">
+                <button class="btn btn-success" id="btnBuscar" @click="buscarPerfume">Buscar</button>
+            </td>
+        </tr>
+    </div>
+
     <div id="listado1">
         <table class="table table-dark">
             <thead>
@@ -18,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in listaPerfumes" v-bind:key='index'>
+                <tr v-for="(item, index) in localProducts" v-bind:key='index'>
                     <td>{{item.idPerfume}}</td>
                     <td>{{item.creator}}</td>
                     <td>{{item.fragrance}}</td>
@@ -43,27 +52,60 @@
     export default {
         name: 'ListaPrecios',
         props: ['listaPerfumes'],
+        created(){
+        },
         data(){
             return {
-                checkedProducts:[]
+                checkedProducts:[],
+                localProducts:[] = this.listaPerfumes,
+                queryParam:"",
             }
         },
         emits: ['enviar'],
         methods:{
+            refrescarListaLocal(){
+                this.localProducts = this.listaPerfumes;
+            },
             aceptar(){
                 //
             },
+            buscarPerfume() {
+                if (this.queryParam) {
+                    this.refrescarListaLocal();
+                    let array1 = ( this.localProducts.filter(item => {
+                    return this.queryParam
+                        .toLowerCase()
+                        .split(" ")
+                        .every(v => item.fragrance.toLowerCase().includes(v));
+                    }) );
+                    //array1 = JSON.parse(JSON.stringify(array1));
+                    //console.log(this.listaPerfumes)
+                    //console.log(array1)
+                    this.localProducts = array1;
+                } else {
+                    this.refrescarListaLocal();
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
-
+#recuadroBuscador{
+    width: 30%;
+}
+#tdInpBuscador{
+    width: 80%;
+}
+#btnBuscar{
+    margin-left: 20%;
+}
 #btnAplicar{
     margin: 1%;
     margin-left:80%;
 }
 #listado1{
+    margin-top: 1%;
     overflow-y: scroll;
     height: 350px;
     font-size: large;
