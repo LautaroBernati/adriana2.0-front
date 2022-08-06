@@ -44,6 +44,7 @@ export default {
       await this.service.getAllClientes()
         .then((data) => {
           this.clientes = data.data;
+          this.mostrarLista = true;
         });
     } catch(err){
       console.log(err.message);
@@ -53,7 +54,7 @@ export default {
     return {
       clientes: [],
       cliente: {},
-      mostrarLista: true,
+      mostrarLista: false,
       mostrarDetalle: false,
       accion: "",
     };
