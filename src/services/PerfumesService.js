@@ -19,6 +19,19 @@ class PerfumesService extends Service {
     async getPerfumeByIDPerfume(idPerfume) {
         return await this.apiClient.get('/perfumes=?'+idPerfume);
       }
+    async getPerfumesPaginated(pagination, filter = null) {
+        var query = "/perfumes?";
+        query += "&pageSize=" + pagination.pageSize;
+        query += "&page=" + pagination.page;
+        if (filter != null) {
+            query += "&creator="+filter.creator;
+            query += "&fragrance="+filter.fragrance;
+            query += "&gender="+filter.gender;
+        }
+        console.log(query)
+        
+        return await this.apiClient.get(query);
+    }
     async getAllPerfumes() {
         return await this.apiClient.get('/perfumes');
     }

@@ -3,11 +3,31 @@
         <div id="recuadroSeleccionador">
             <div>
                 <tr>
-                    <td id="tdInpBuscador" style="width: 80%;">
-                        <input type="text" id="inpBuscador" class="form-control" placeholder="Escriba aqui para buscar un perfume"
-                        data-toggle="tooltip" data-placement="top" title="Busca creador y/o fragancia" v-model="queryParam">
-                    </td>            
-                    <td id="tdBtnBuscar">
+                    <td id="tdInpBuscadorCr" style="width: 20%;">
+                        <label for="">Filtrar creador</label>
+                        <select class="form-select" aria-label="Seleccionar un Creador" name="selCreator" id="selCreator"
+                        v-model="vueTable.filterCreator">
+                            <option selected disabled value="-1">Seleccionar un Creador</option>
+                            <option value="Armani">Armani</option>
+                            <option value="Christian Dior">Christian Dior</option>
+                        </select>
+                    </td>
+                    <td id="tdInpBuscador" style="width: 30%;">
+                        <label for="">Buscar por perfume</label>
+                        <input type="text" id="inpBuscador" class="form-control" placeholder="Buscar un perfume"
+                        data-toggle="tooltip" data-placement="top" title="Buscar fragancia" v-model="vueTable.filterFragrance">
+                    </td>
+                    <td style="width: 30%">
+                        <label for="">Filtrar genero</label>
+                        <select class="form-select" aria-label="Seleccionar un Genero" name="selGender" id="selGender" 
+                        v-model="vueTable.filterGender">
+                            <option selected disabled value="-1">Seleccionar un Genero</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Unisex">Unisex</option>
+                        </select>
+                    </td>
+                    <td id="tdBtnBuscar" style="text-align: center; vertical-align: middle;">
                         <button class="btn btn-success" id="btnBuscar" @click="buscarPerfume">Buscar</button>
                     </td>
                 </tr>
@@ -22,7 +42,7 @@
                             <th>Sexo</th>
                             <th>Precio 100ml</th>
                             <th>Precio 60ml</th>
-                            <th>Seleccionar</th>
+                            <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +63,10 @@
             <div v-else>
                 <p>Cargando datos...</p>
             </div>
-
+            <div class="vuetable-panel-final">
+                <button class="btn btn-secondary">asdasd</button>
+            </div>
+            
             <tr id="selRow">
                 <td>
                 <label class="" for="cantidad">Cantidad</label>
@@ -51,7 +74,7 @@
                 </td>
 
                 <td>
-                    <label class="" for="creador">----- Creador -----</label>
+                    <label class="" for="creador">----- Creador / Fragancia -----</label>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
                             <div class="input-group-text">{{perfume.creator}}</div>
@@ -110,13 +133,21 @@
 
 <script>
 import PerfumesService from '../../services/PerfumesService.js';
+var service;
 export default {
     async created(){
-        let service = new PerfumesService(this.$store.getters.getToken);
             try{
-                let data = await service.getAllPerfumes();
-                this.resultados = data.data;
-                this.resetListaLocal();
+                service = new PerfumesService(this.$store.getters.getToken);
+                let pagination = {
+                    pageSize: 10,
+                    page: 1
+                };
+                let filter = {
+                    creator: "Armani",
+                    fragrance: "Si",
+                    gender: "Femenino"
+                };
+                this.buscarPerfume(pagination, filter);
                 this.listaIsDisabled = false; //tuve que llegar a esto para que el componente respete el asincronismo de getAllPerfumes
             } catch(e){
                 console.log(e.message);
@@ -136,23 +167,35 @@ export default {
             cant: 1,
             medioPago: "Efectivo/Transferencia",
             medida: "100mL",
-            queryParam:"",
+            vueTable: {
+                page: 1,
+                pageSize: 10,
+                pageSizes : [10, 20, 30, 50, 100, 200],
+                filterCreator: "",
+                filterFragrance:"",
+                filterGender: "",
+            },
+
         }
     },
     methods:{
-        buscarPerfume() {
-                if (this.queryParam) {
-                    this.resetListaLocal();
-                    let array1 = ( this.items.filter(item => {
-                    return this.queryParam
-                        .toLowerCase()
-                        .split(" ")
-                        .every(v => item.fragrance.toLowerCase().includes(v));
-                    }) );
-                    this.items = array1;
-                } else {
-                    this.resetListaLocal();
-                }
+        async buscarPerfume(pagination, filter = null) {
+                this.resetListaLocal();
+
+                let data = await service.getPerfumesPaginated(pagination, filter);
+                this.items = data.data.Contenido;
+
+                /*let filtered = this.items[0].fragrance.replace(/\D+/g, ' ').trim().split(' ').map(e => parseInt(e));
+                console.log(filtered);
+                return null;
+                let array1 = ( this.items.filter(item => {
+                return this.queryParam
+                    .toLowerCase()
+                    .split(" ")
+                    .every(v => item.fragrance.toLowerCase().includes(v));
+                }) );
+                this.items = array1;*/
+                
             },
         resetListaLocal(){
             this.items = this.resultados;

@@ -9,7 +9,7 @@
             60ml: <br>
             $ {{item.price60ml}} Efectivo/Transferencia <br>
             $ {{item.price60ml*0.20+item.price60ml}} Mercado Pago <br>
-        </p>    
+        </p>
         <!--</textarea>-->
     </div>
     <div v-if="(!!perfumesSeleccionados)">
