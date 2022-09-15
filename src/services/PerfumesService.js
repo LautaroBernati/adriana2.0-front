@@ -20,6 +20,7 @@ class PerfumesService extends Service {
         return await this.apiClient.get('/perfumes=?'+idPerfume);
       }
     async getPerfumesPaginated(pagination, filter = null) {
+        if(!pagination.pageSize || !pagination.page) { throw new Error('Pagination cannot be null')}
         var query = "/perfumes?";
         query += "&pageSize=" + pagination.pageSize;
         query += "&page=" + pagination.page;
@@ -31,6 +32,9 @@ class PerfumesService extends Service {
         console.log(query)
         
         return await this.apiClient.get(query);
+    }
+    async getAllCreators() {
+        return await this.apiClient.get('/perfumes/getAllCreators');
     }
     async getAllPerfumes() {
         return await this.apiClient.get('/perfumes');
