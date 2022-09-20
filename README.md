@@ -1,6 +1,9 @@
 # adriana-2.0
 
-This template should help get you started developing with Vue 3 in Vite.
+Sistema de Gestión para negocio Via France - Proyecto personal de Lautaro Bernati
+
+## Aclaracion sobre la API
+Por cuestiones de seguridad, el repositorio de la API (nodejs mongodb) se encuentra privado
 
 ## Recommended IDE Setup
 
