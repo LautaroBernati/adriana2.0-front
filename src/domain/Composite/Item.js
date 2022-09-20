@@ -1,15 +1,13 @@
 import Producto from "./Producto";
 
 class Item extends Producto {
-    constructor(perfume, cantidad, precio, medida, medioPago){
-        super(precio);
-        this.perfume = perfume;
+    constructor(articulo, cantidad){
+        super(0);
         this.cantidad = cantidad;
-        this.medida = medida;
-        this.medioPago = medioPago;
+        this.articulo = articulo;
     }
-    getPrecio(){
-        return Number(this.precio);
+    calcularPrecio(){
+        return this.articulo.calcularPrecio()*this.cantidad;
     }
 }
 export default Item;

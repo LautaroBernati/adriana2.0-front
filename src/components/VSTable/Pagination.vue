@@ -29,7 +29,7 @@
                     <button class="pagination-button"
                     v-bind:disabled="currentBatch <= 0"
                     @click="currentBatch -= 1">
-                        Anteriores
+                        <i class="bi bi-arrow-left"></i>
                     </button>
                 </td>
                 <td>
@@ -43,7 +43,7 @@
                     </div>
                     <div v-else>
                         <span v-for="(item, index) in (lotes[currentBatch])" :key="index">
-                            <button v-bind:class="['pagination-button', pageNumber == lotes[currentBatch][index] ? 'active' : '']"
+                            <button :class="['pagination-button', pageNumber == lotes[currentBatch][index] ? 'active' : '']" :disabled="pageNumber == lotes[currentBatch][index]"
                                 @click="cambiarPagina(lotes[currentBatch][index])">
                                     {{lotes[currentBatch][index]}}
                             </button>
@@ -54,7 +54,7 @@
                     <button class="pagination-button"
                     v-bind:disabled="currentBatch >= lotes.length-1"
                     @click="currentBatch += 1">
-                        Siguientes
+                        <i class="bi bi-arrow-right"></i>
                     </button>
                 </td>
                 <td>
@@ -141,9 +141,6 @@ export default {
                 } else {
                     aux = paginasRestantes;
                 }
-                
-                //console.log('aux: '+aux)
-                //console.log('aux2: '+aux2)
                 aux3 = 0;
 
                 do {
@@ -152,11 +149,8 @@ export default {
                     aux3++;
                 } while (aux3 < aux);
 
-                //console.log('aux3: '+aux3)
-                //console.log('auxArray: '+auxArray);
                 lotes2[index] = auxArray;
             }
-            console.log(lotes2)
             this.lotes = lotes2;
         }
     },

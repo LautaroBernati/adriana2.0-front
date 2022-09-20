@@ -49,20 +49,20 @@
             </div>
 
             <hr>
-            
+
             <tr id="selRow">
                 <td>
                 <label class="" for="cantidad">Cantidad</label>
-                <input type="number" class="form-control mb-2 mr-sm-2" id="inputCant" min="1" max="20" v-model="cant" @change="calcularPrecio($event)">
+                <input type="number" class="form-control mb-2 mr-sm-2 text-center" id="inputCant" min="1" max="20" v-model="item.cantidad">
                 </td>
 
                 <td>
                     <label class="" for="creador">----- Creador / Fragancia -----</label>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
-                            <div class="input-group-text">{{perfume.creator}}</div>
+                            <div class="input-group-text">{{item.articulo.creator}}</div>
                         </div>
-                        <input type="text" class="form-control" id="inputFrag" placeholder="Fragancia" :value="perfume.fragrance">
+                        <input type="text" class="form-control" id="inputFrag" placeholder="Fragancia" :value="item.articulo.fragrance">
                     </div>
                 </td>
 
@@ -70,21 +70,21 @@
                     <label class="" for="genero">Sexo</label>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
-                            <div class="input-group-text">{{perfume.gender}}</div>
+                            <div class="input-group-text">{{item.articulo.gender}}</div>
                         </div>
                     </div>
                 </td>
 
                 <td>
-                    <label class="" for="inlineFormCustomSelectPref">Medida</label>
-                    <select class="form-select" id="inlineFormCustomSelectPref" @change="calcularPrecio($event)" v-model="medida">
-                        <option value="100mL" selected>100mL</option>
-                        <option value="60mL">60mL</option>
+                    <label class="" for="inlineFormCustomSelectPref">Medida (en mL)</label>
+                    <select class="form-select text-center" id="inlineFormCustomSelectPref" v-model="item.articulo.medida">
+                        <option :value="100" selected>100</option>
+                        <option :value="60">60</option>
                     </select>
                 </td>
                 <td>
                     <label class="" for="inlineFormCustomSelectPref">Medio Pago</label>
-                    <select class="form-select" id="inlineFormCustomSelectPref" @change="calcularPrecio($event)" v-model="medioPago">
+                    <select class="form-select" id="inlineFormCustomSelectPref" v-model="item.articulo.medioPago">
                         <option value="Efectivo/Transferencia" selected>Efectivo/Transferencia</option>
                         <option value="MercadoPago" selected>MercadoPago</option>
                 </select>
@@ -94,28 +94,60 @@
                     <label class="" for="precio">Precio</label>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
-                            <div class="input-group-text">$ {{perfume.price}}</div>
+                            <div class="input-group-text">$ {{item.calcularPrecio()}}</div>
                         </div>
                     </div>
                 </td>
                 <td>
                     <label class="" for=""></label>
                     <div>
-                        <button class="btn btn-primary mb-2" v-on:click="$emit('aplicar', perfume, cant, medida, medioPago)">Aplicar</button>
+                        <!--<button class="btn btn-primary mb-2" v-on:click="$emit('aplicar', perfume, cant, medida, medioPago)">Aplicar</button>-->
+                        <button class="btn btn-primary mb-2" v-on:click="enviarProducto(this.item)">Aplicar</button>
                     </div>
-                    
                 </td>
-                
             </tr>
+            
+            <div>
+                <tr>
+                    <td>
+                        <label class="" for="cantidad">Cantidad</label>
+                        <input type="number" class="form-control mb-2 mr-sm-2" id="inputCantEnvios" min="1" max="10" v-model="datosEnvio.cant">
+                    </td>
+
+                    <td>
+                        <label class="" for="inlineFormCustomSelectPref">Tipo de Envio</label>
+                        <select class="form-select mb-2 mr-sm-2" id="inlineFormCustomSelectPref" v-model="datosEnvio.tipoEnvio">
+                            <option value="A Domicilio" selected>A Domicilio</option>
+                            <option value="A Sucursal">A Sucursal</option>
+                            <option value="Moto">Moto</option>
+                        </select>
+                    </td>
+                    
+                    
+                    <td>
+                        <label class="" for="precioDeEnvio">Precio</label>
+                        <input type="number" class="form-control mb-2 mr-sm-2" id="inputPrecioEnvio" min="1" v-model="datosEnvio.precio">
+                    </td>
+                    <td>
+                        <label class="" for=""></label>
+                        <div>
+                            <button class="btn btn-primary mb-2" v-on:click="crearEnvio">Aplicar</button>
+                        </div>
+                    </td>
+                </tr>
+            </div>
         </div>
         
     </div>
 </template>
 
 <script>
+import Item from '../../domain/Composite/Item.js';
+import Envio from '../../domain/Composite/Envio.js';
 import PerfumesService from '../../services/PerfumesService.js';
 import Pagination from '../VSTable/Pagination.vue';
 import VTable from '../VSTable/VTable.vue';
+import Perfume from '../../domain/Composite/Perfume.js';
 var service;
 export default {
     async created(){
@@ -148,10 +180,13 @@ export default {
             items: [],
             resultados: [],
             listaIsDisabled: true,
-            perfume: {},
+            item: new Item(new Perfume(0, "Algo", "", "", 100, 0, 0, ""), 1),
             cant: 1,
-            medioPago: "Efectivo/Transferencia",
-            medida: "100mL",
+            datosEnvio:{
+                cant: 1,
+                tipoEnvio: "A Domicilio",
+                precio: 700,
+            },
             vueTable: {
                 page: 1,
                 pageSize: 20,
@@ -226,22 +261,17 @@ export default {
     },
     methods:{
         receivePagination(pagination){
-            console.log('PARENT Seleccionador: Recibo pagination: ' + JSON.stringify(pagination))
             this.vueTable.page = pagination.page;
             this.vueTable.pageSize = pagination.pageSize;
             
             this.buscarPerfume(null, pagination);
         },
         receiveCustomEvent(data){
-            console.log('PARENT Seleccionador: Recibo objeto '+JSON.stringify(data))
-            this.perfume = data;
-            this.calcularPrecio();
+            //console.log('PARENT Seleccionador: Recibo objeto '+JSON.stringify(data))
+            this.crearPerfume(data);
         },
         async buscarPerfume(event = null, pagination = null, filter = null) {
                 this.resetListaLocal();
-                console.log('pagination? '+pagination)
-                
-            
                 pagination = pagination == null ? {page: this.vueTable.page, pageSize: this.vueTable.pageSize} : pagination;
 
                 if (filter == null) {
@@ -250,7 +280,6 @@ export default {
                     (this.vueTable.filterFragrance != "") ? filter.fragrance = this.vueTable.filterFragrance : filter.fragrance='';
                     (this.vueTable.filterGender != "") ? filter.gender = this.vueTable.filterGender : filter.gender='';
                 }
-                console.log('filter? '+JSON.stringify(filter))
 
                 let data = await service.getPerfumesPaginated(pagination, filter);
                 this.items = data.data.Contenido;
@@ -265,21 +294,17 @@ export default {
             this.vueTable.filterGender = "";
             this.buscarPerfume();
         },
-        calcularPrecio(event = null){
-            this.perfume.price = 0;
-            
-            if(this.medida == "100mL" && this.medioPago == "Efectivo/Transferencia"){
-                this.perfume.price = Number(this.perfume.price100ml);
-            } else if(this.medida == "60mL" && this.medioPago == "Efectivo/Transferencia"){
-                this.perfume.price = Number(this.perfume.price60ml);
-            } else if(this.medida == "100mL" && this.medioPago == "MercadoPago"){
-                this.perfume.price = Number(this.perfume.price100ml*0.20+this.perfume.price100ml);
-            } else if(this.medida == "60mL" && this.medioPago == "MercadoPago"){
-                this.perfume.price = Number(this.perfume.price60ml*0.20+this.perfume.price60ml);
-            } else {
-                this.perfume.price = 0;
-            }
-            this.perfume.price = Number(this.perfume.price * this.cant);
+        crearPerfume(data){
+            this.item.articulo = new Perfume(data._id, data.creator, data.fragrance, data.gender, 100, data.price100ml, data.price60ml, "Efectivo/Transferencia");
+        },
+        crearEnvio(e = null){
+            e.preventDefault();
+            let envio = new Envio(this.datosEnvio.precio, this.datosEnvio.cant, this.datosEnvio.tipoEnvio);
+            this.enviarProducto(envio);
+        },
+        enviarProducto(producto){
+            if (!producto) {throw new Error('Cannot create null Producto');}
+            this.$emit('aplicar', producto);
         }
     },
     emits:

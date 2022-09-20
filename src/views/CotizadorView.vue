@@ -2,7 +2,7 @@
     <Seleccionador
     v-on:aplicar="aplicarItem"></Seleccionador>
     <div id="listaPreview">
-            <table class="table table-dark">
+            <table class="table table-dark table-bordered text-center">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -18,14 +18,25 @@
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in items.productos" v-bind:key='index'>
-                        <td>{{ item.perfume.idPerfume }}</td>
-                        <td>{{ item.cantidad }}</td>
-                        <td>{{ item.perfume.creator }}</td>
-                        <td>{{ item.perfume.fragrance }}</td>
-                        <td>{{ item.perfume.gender }}</td>
-                        <td>{{ item.medida }}</td>
-                        <td>{{ item.medioPago }}</td>
-                        <td>{{ Number(item.precio) }}</td>
+                        <template v-if="item.articulo">
+                            <td>{{ item.articulo.id }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.articulo.creator }}</td>
+                            <td>{{ item.articulo.fragrance }}</td>
+                            <td>{{ item.articulo.gender }}</td>
+                            <td>{{ item.articulo.medida }}</td>
+                            <td>{{ item.articulo.medioPago }}</td>
+                        </template>
+                        <template v-else>
+                            <td>ENVIO</td>
+                            <td>{{item.cantidad}}</td>
+                            <td>{{item.tipoEnvio}}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </template>
+                        <td>$ {{ Number(item.calcularPrecio()) }}</td>
                         <td>
                             <button class="btn btn-warning" @click="borrarItem(index)">Borrar</button>
                         </td>
@@ -33,9 +44,14 @@
                 </tbody>
             </table>
             <div id="datosFormateados">
-                <p v-for="(item, index) in items.productos" v-bind:key="index">
-                    (x{{item.cantidad}}) Tester {{item.perfume.fragrance}} {{item.perfume.gender}} {{item.medida}} {{item.medioPago}} $ {{item.precio}}
-                </p>
+                <li v-for="(item, index) in items.productos" v-bind:key="index">
+                    <template v-if="item.articulo">
+                        (x{{item.cantidad}}) Tester {{item.articulo.fragrance}} {{item.articulo.gender}} {{item.articulo.medida}}mL {{item.articulo.medioPago}} $ {{Number(item.calcularPrecio())}}
+                    </template>
+                    <template v-else>
+                        (x{{item.cantidad}}) Envio {{item.tipoEnvio}} $ {{item.precio}}
+                    </template>
+                </li>
                 <p>Total de $ {{items.getPrecioTotal()}}</p>
             </div>
             <button class="btn btn-success" @click="copiarDatos()"  style="margin-top: 1%;">Copiar Texto</button>
@@ -43,16 +59,18 @@
 </template>
 
 <script>
-//import PerfumesService from '../services/PerfumesService';
 import Seleccionador from '../components/perfumes/Seleccionador.vue';
-import Perfume from '../domain/models/Perfume.js';
+import Perfume from '../domain/Composite/Perfume.js';
 import Item from '../domain/Composite/Item.js';
 import ListaProductos from '../domain/Composite/ListaProductos.js'
+import Producto from '../domain/Composite/Producto';
     export default {
         data(){
             return{
                 items:[],
-                perfume:{}
+                perfume:{},
+                item: {},
+                envio: {}
             }
         },
         beforeMount(){
@@ -62,30 +80,32 @@ import ListaProductos from '../domain/Composite/ListaProductos.js'
             Seleccionador,
         },
         methods:{
-            aplicarItem(item, cant, medida, medioPago){
-                if(!item.idPerfume){
+            aplicarItem(item){
+                //this.item = new Item(item.articulo, item.cantidad);
+                (item.articulo) ? this.item = new Item(item.articulo, item.cantidad) : this.envio = item;
+                console.log(this.item)
+                if(!(item instanceof Producto)){
                     this.$swal.fire({
                         position: 'bottom-end',
                         icon: 'error',
-                        title: 'Debe seleccionar un item',
+                        title: 'Error al procesar el item seleccionado',
                         showConfirmButton: false,
                         timer: 3000
                     });
                 } else {
-                    let perfume = new Perfume(item._id, item.idPerfume, item.creator, item.fragrance, item.gender, item.price100ml, item.price60ml);
-                    let item2 = new Item(perfume, cant, item.price, medida, medioPago);
+                    //let perfume = new Perfume(item._id, item.idPerfume, item.creator, item.fragrance, item.gender, item.price100ml, item.price60ml);
+                    //let item2 = new Item(perfume, cant, item.price, medida, medioPago);
                     //this.items.push(item2);
-                    this.items.addProducto(item2);  
+                    (item.articulo) ? this.items.addProducto(this.item) : this.items.addProducto(this.envio);
                 }
             },
             borrarItem(index){
                 this.items.removeProducto(index);
             },
-            copiarDatos(){
+            async copiarDatos(){
                 try{
                     let text = document.getElementById("datosFormateados").innerText;
-                    let clipboardData = event.clipboardData || window.clipboardData || event.originalEvent?.clipboardData || navigator.clipboard;
-                    clipboardData.writeText(text);
+                    await navigator.clipboard.writeText(text);
                     
                     this.$swal.fire({
                         position: 'top-end',

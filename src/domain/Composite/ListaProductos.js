@@ -19,7 +19,7 @@ class ListaProductos extends Producto {
     getPrecioTotal(){
         let acumulador = 0;
         this.productos.forEach(element => {
-            acumulador =  acumulador + element.getPrecio();
+            acumulador =  acumulador + element.calcularPrecio();
         });
         return acumulador;
     }
